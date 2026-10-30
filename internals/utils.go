@@ -10,7 +10,7 @@ func LoadLines(path string) ([]string, error) {
 	lines := []string{}
 
 	if path == "" {
-		path = "~/.kopierare/config.json"
+		path = "~/.kopierare/config.txt"
 	}
 	data, err := os.Open(path)
 
