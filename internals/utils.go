@@ -4,13 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func LoadLines(path string) ([]string, error) {
 	lines := []string{}
 
 	if path == "" {
-		path = "~/.kopierare/config.txt"
+		homedir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, err
+		}
+		path = filepath.Join(homedir, ".kopierare", "config.txt")
 	}
 	data, err := os.Open(path)
 
