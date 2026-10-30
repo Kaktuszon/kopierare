@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"kopierare/v2/internals"
 	"os"
@@ -8,13 +9,16 @@ import (
 )
 
 func main() {
-	lines := []string{}
-	lines, err := internals.LoadLines("")
+	configPath := flag.String("path", "", "Path to config file, if empty ~/.kopierare/config.txt")
+	flag.Parse()
 
 	var input int
 
+	lines := []string{}
+	lines, err := internals.LoadLines(*configPath)
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	for i, v := range lines {
