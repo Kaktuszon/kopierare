@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -41,5 +42,31 @@ func CheckX11orWayland() string {
 		return "wayland"
 	} else {
 		return "x11"
+	}
+}
+
+func HandleCopyCommand(input string) {
+	cmd := exec.Command("")
+	if CheckX11orWayland() == "wayland" {
+		cmd = exec.Command("wl-copy")
+	} else {
+		cmd = exec.Command("xclip", "-selection", "clipboard")
+	}
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		fmt.Println("Failed creating the pipe")
+		os.Exit(1)
+	}
+
+	// Write to clipboard
+	go func() {
+		defer stdin.Close()
+		_, _ = stdin.Write([]byte(input))
+	}()
+
+	if err := cmd.Start(); err != nil {
+		fmt.Println("Error running copy command. Is xclip installed?")
+		os.Exit(1)
 	}
 }
