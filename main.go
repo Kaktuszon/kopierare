@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"kopierare/v2/internals"
+	"kopierare/v2/utils"
 	"os"
 )
 
@@ -14,7 +14,7 @@ func main() {
 	var input int
 
 	lines := []string{}
-	lines, err := internals.LoadLines(*configPath)
+	lines, err := utils.LoadLines(*configPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -27,7 +27,7 @@ func main() {
 	fmt.Printf("\nCopy number: ")
 	fmt.Scan(&input)
 
-	internals.HandleCopyCommand(lines[input])
+	utils.HandleCopyCommand(lines[input])
 
 	fmt.Printf("Copied %s to clipboard\n", lines[input])
 }
