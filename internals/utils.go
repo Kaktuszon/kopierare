@@ -34,7 +34,7 @@ func LoadLines(path string) ([]string, error) {
 	return lines, nil
 }
 
-func CheckX11orWayland() string {
+func checkX11orWayland() string {
 	session := os.Getenv("XDG_SESSION_TYPE")
 	wayland := os.Getenv("WAYLAND_DISPLAY")
 
@@ -47,7 +47,7 @@ func CheckX11orWayland() string {
 
 func HandleCopyCommand(input string) {
 	cmd := exec.Command("")
-	if CheckX11orWayland() == "wayland" {
+	if checkX11orWayland() == "wayland" {
 		cmd = exec.Command("wl-copy")
 	} else {
 		cmd = exec.Command("xclip", "-selection", "clipboard")
