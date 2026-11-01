@@ -11,10 +11,12 @@ func main() {
 	configPath := flag.String("path", "", "Path to config file, if empty ~/.kopierare/config.txt")
 	flag.Parse()
 
+	var cfg utils.Config
+	cfg, err := utils.LoadConfig(*configPath)
+
 	var input int
 
-	lines := []string{}
-	lines, err := utils.LoadLines(*configPath)
+	lines := cfg.Lines
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

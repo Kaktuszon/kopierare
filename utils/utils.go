@@ -14,22 +14,22 @@ type Config struct {
 	Lines    []string `yaml:"lines"`
 }
 
-func LoadLines(path string) ([]string, error) {
+func LoadConfig(path string) (Config, error) {
+	var cfg Config
 	if path == "" {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
-			return nil, err
+			return cfg, err
 		}
 		path = filepath.Join(homedir, ".kopierare", "config.yaml")
 	}
 	file, _ := os.ReadFile(path)
 
-	var cfg Config
 	if err := yaml.Unmarshal(file, &cfg); err != nil {
-		return nil, err
+		return cfg, err
 	}
 
-	return cfg.Lines, nil
+	return cfg, nil
 }
 
 func checkX11orWayland() string {
