@@ -1,37 +1,35 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"go.yaml.in/yaml/v3"
 )
 
-func LoadLines(path string) ([]string, error) {
-	lines := []string{}
+type Config struct {
+	Software string   `yaml:"software"`
+	Lines    []string `yaml:"lines"`
+}
 
+func LoadLines(path string) ([]string, error) {
 	if path == "" {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
 			return nil, err
 		}
-		path = filepath.Join(homedir, ".kopierare", "config.txt")
+		path = filepath.Join(homedir, ".kopierare", "config.yaml")
 	}
-	data, err := os.Open(path)
+	file, _ := os.ReadFile(path)
 
-	if err != nil {
-		fmt.Println("File not found")
+	var cfg Config
+	if err := yaml.Unmarshal(file, &cfg); err != nil {
 		return nil, err
 	}
-	defer data.Close()
 
-	scanner := bufio.NewScanner(data)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	return lines, nil
+	return cfg.Lines, nil
 }
 
 func checkX11orWayland() string {
