@@ -14,14 +14,14 @@ func main() {
 	var cfg utils.Config
 	cfg, err := utils.LoadConfig(*configPath)
 
-	var input int
-
-	lines := cfg.Lines
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
+	var input int
+
+	lines := cfg.Lines
 	for i, v := range lines {
 		fmt.Printf("[%v] %s\n", i, v)
 	}
