@@ -29,7 +29,10 @@ func main() {
 	fmt.Printf("\nCopy number: ")
 	fmt.Scan(&input)
 
-	utils.HandleCopyCommand(lines[input])
+	if err = utils.HandleCopyCommand(lines[input], cfg); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	fmt.Printf("Copied %s to clipboard\n", lines[input])
 }

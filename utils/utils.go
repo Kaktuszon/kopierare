@@ -32,29 +32,29 @@ func LoadConfig(path string) (Config, error) {
 	return cfg, nil
 }
 
-func checkX11orWayland() string {
-	session := os.Getenv("XDG_SESSION_TYPE")
-	wayland := os.Getenv("WAYLAND_DISPLAY")
-
-	if session == "wayland" && wayland != "" {
-		return "wayland"
-	} else {
-		return "x11"
+func checkCopySoftware(cfg Config) (*exec.Cmd, error) {
+	cmd := &exec.Cmd{}
+	switch cfg.Software {
+	case "xclip":
+		cmd = exec.Command("xclip", "-selection", "clipboard")
+	case "wl-copy":
+		cmd = exec.Command("wl-copy")
+	default:
+		return nil, fmt.Errorf("Unrecognised copying Software. Valid: xclip, wl-copy\n")
 	}
+
+	return cmd, nil
 }
 
-func HandleCopyCommand(input string) {
-	cmd := exec.Command("")
-	if checkX11orWayland() == "wayland" {
-		cmd = exec.Command("wl-copy")
-	} else {
-		cmd = exec.Command("xclip", "-selection", "clipboard")
+func HandleCopyCommand(input string, cfg Config) error {
+	cmd, err := checkCopySoftware(cfg)
+	if err != nil {
+		return err
 	}
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		fmt.Println("Failed creating the pipe")
-		os.Exit(1)
+		return err
 	}
 
 	// Write to clipboard
@@ -64,7 +64,8 @@ func HandleCopyCommand(input string) {
 	}()
 
 	if err := cmd.Start(); err != nil {
-		fmt.Println("Error running copy command. Is xclip installed?")
-		os.Exit(1)
+		return fmt.Errorf("Error running copy command.\n")
 	}
+
+	return nil
 }
