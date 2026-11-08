@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	configPath := flag.String("path", "", "Path to config file, if empty ~/.kopierare/config.txt")
+	configPath := flag.String("path", "", "Path to config file, if empty ~/.kopierare/config.yaml")
 	flag.Parse()
 
 	var cfg utils.Config
